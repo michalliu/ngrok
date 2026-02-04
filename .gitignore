@@ -8,3 +8,23 @@ src/launchpad.net
 src/gopkg.in
 src/ngrok/client/assets/
 src/ngrok/server/assets/
+
+# Go
+go.sum
+
+# Docker
+.env
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+tmp/
+temp/

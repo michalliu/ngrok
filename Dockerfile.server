@@ -1,0 +1,36 @@
+# Dockerfile for ngrokd (server)
+FROM golang:1.21-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git make
+
+# Set working directory
+WORKDIR /build
+
+# Copy go mod files
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the server
+RUN make release-server
+
+# Final stage
+FROM alpine:latest
+
+# Install ca-certificates for HTTPS
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /app
+
+# Copy binary from builder
+COPY --from=builder /build/bin/ngrokd /app/ngrokd
+
+# Expose ports
+EXPOSE 80 443 4443
+
+# Default command
+ENTRYPOINT ["/app/ngrokd"]
+CMD ["-domain", "ngrok.example.com", "-httpAddr", ":80", "-httpsAddr", ":443", "-tunnelAddr", ":4443"]

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # ngrok server
+  ngrokd:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: ngrokd
+    restart: unless-stopped
+    ports:
+      - "80:80"       # HTTP
+      - "443:443"     # HTTPS
+      - "4443:4443"   # Tunnel
+    environment:
+      - DOMAIN=${NGROK_DOMAIN:-ngrok.example.com}
+    command: >
+      -domain ${NGROK_DOMAIN:-ngrok.example.com}
+      -httpAddr :80
+      -httpsAddr :443
+      -tunnelAddr :4443
+      -log stdout
+      -log-level INFO
+    volumes:
+      - ./certs:/app/certs:ro
+    networks:
+      - ngrok-net
+
+  # ngrok client (example)
+  ngrok-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: ngrok-client
+    restart: unless-stopped
+    environment:
+      - SERVER_ADDR=${NGROK_DOMAIN:-ngrok.example.com}:4443
+      - LOCAL_PORT=${LOCAL_PORT:-8080}
+    command: >
+      -server-addr ${NGROK_DOMAIN:-ngrok.example.com}:4443
+      -log stdout
+      ${LOCAL_PORT:-8080}
+    networks:
+      - ngrok-net
+    depends_on:
+      - ngrokd
+
+networks:
+  ngrok-net:
+    driver: bridge
