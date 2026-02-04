@@ -19,6 +19,11 @@ WORKDIR /ngrok
 # 复制源码
 COPY . .
 
+# 安装 go-bindata 工具（使用新的 go install 命令）
+RUN go install github.com/go-bindata/go-bindata/v3/go-bindata@latest && \
+    mkdir -p /ngrok/bin && \
+    cp $(go env GOPATH)/bin/go-bindata /ngrok/bin/go-bindata
+
 # 构建 ngrokd 服务器
 RUN make release-server
 
