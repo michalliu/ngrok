@@ -1,9 +1,10 @@
+//go:build !release && !autoupdate
 // +build !release,!autoupdate
 
 package client
 
 import (
-	"ngrok/client/mvc"
+	"github.com/inconshreveable/ngrok/src/ngrok/client/mvc"
 )
 
 // no auto-updating in debug mode

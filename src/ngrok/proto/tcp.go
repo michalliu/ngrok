@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"ngrok/conn"
+	"github.com/inconshreveable/ngrok/src/ngrok/conn"
 )
 
 type Tcp struct{}

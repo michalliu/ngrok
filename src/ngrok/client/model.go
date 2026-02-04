@@ -3,17 +3,17 @@ package client
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/inconshreveable/ngrok/src/ngrok/client/mvc"
+	"github.com/inconshreveable/ngrok/src/ngrok/conn"
+	"github.com/inconshreveable/ngrok/src/ngrok/log"
+	"github.com/inconshreveable/ngrok/src/ngrok/msg"
+	"github.com/inconshreveable/ngrok/src/ngrok/proto"
+	"github.com/inconshreveable/ngrok/src/ngrok/util"
+	"github.com/inconshreveable/ngrok/src/ngrok/version"
 	metrics "github.com/rcrowley/go-metrics"
-	"io/ioutil"
+	"io"
 	"math"
 	"net"
-	"ngrok/client/mvc"
-	"ngrok/conn"
-	"ngrok/log"
-	"ngrok/msg"
-	"ngrok/proto"
-	"ngrok/util"
-	"ngrok/version"
 	"runtime"
 	"strings"
 	"sync/atomic"
@@ -174,7 +174,7 @@ func (c *ClientModel) PlayRequest(tunnel mvc.Tunnel, payload []byte) {
 	defer localConn.Close()
 	localConn = tunnel.Protocol.WrapConn(localConn, mvc.ConnectionContext{Tunnel: tunnel, ClientAddr: "127.0.0.1"})
 	localConn.Write(payload)
-	ioutil.ReadAll(localConn)
+	io.ReadAll(localConn)
 }
 
 func (c *ClientModel) Shutdown() {

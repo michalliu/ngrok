@@ -2,11 +2,11 @@
 package term
 
 import (
+	"github.com/inconshreveable/ngrok/src/ngrok/client/mvc"
+	"github.com/inconshreveable/ngrok/src/ngrok/log"
+	"github.com/inconshreveable/ngrok/src/ngrok/proto"
+	"github.com/inconshreveable/ngrok/src/ngrok/util"
 	termbox "github.com/nsf/termbox-go"
-	"ngrok/client/mvc"
-	"ngrok/log"
-	"ngrok/proto"
-	"ngrok/util"
 	"time"
 )
 

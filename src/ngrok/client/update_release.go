@@ -1,11 +1,12 @@
+//go:build release || autoupdate
 // +build release autoupdate
 
 package client
 
 import (
-	"ngrok/client/mvc"
-	"ngrok/log"
-	"ngrok/version"
+	"github.com/inconshreveable/ngrok/src/ngrok/client/mvc"
+	"github.com/inconshreveable/ngrok/src/ngrok/log"
+	"github.com/inconshreveable/ngrok/src/ngrok/version"
 	"time"
 
 	"gopkg.in/inconshreveable/go-update.v0"

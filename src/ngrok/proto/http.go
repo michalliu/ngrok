@@ -3,14 +3,13 @@ package proto
 import (
 	"bufio"
 	"bytes"
+	"github.com/inconshreveable/ngrok/src/ngrok/conn"
+	"github.com/inconshreveable/ngrok/src/ngrok/util"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"ngrok/conn"
-	"ngrok/util"
 	"strings"
 	"sync"
 	"time"
@@ -56,7 +55,7 @@ func NewHttp() *Http {
 func extractBody(r io.Reader) ([]byte, io.ReadCloser, error) {
 	buf := new(bytes.Buffer)
 	_, err := buf.ReadFrom(r)
-	return buf.Bytes(), ioutil.NopCloser(buf), err
+	return buf.Bytes(), io.NopCloser(buf), err
 }
 
 func (h *Http) GetName() string { return "http" }
@@ -142,12 +141,12 @@ func (h *Http) readResponses(tee *conn.Tee, lastTxn chan *HttpTxn) {
 			// sending bytes to each other
 			wg.Add(2)
 			go func() {
-				ioutil.ReadAll(tee.WriteBuffer())
+				io.ReadAll(tee.WriteBuffer())
 				wg.Done()
 			}()
 
 			go func() {
-				ioutil.ReadAll(tee.ReadBuffer())
+				io.ReadAll(tee.ReadBuffer())
 				wg.Done()
 			}()
 
@@ -177,7 +176,7 @@ func drainBody(b io.ReadCloser) (r1, r2 io.ReadCloser, err error) {
 	if err = b.Close(); err != nil {
 		return nil, nil, err
 	}
-	return ioutil.NopCloser(&buf), ioutil.NopCloser(bytes.NewReader(buf.Bytes())), nil
+	return io.NopCloser(&buf), io.NopCloser(bytes.NewReader(buf.Bytes())), nil
 }
 
 // dumpConn is a net.Conn which writes to Writer and reads from Reader
@@ -211,7 +210,7 @@ func DumpRequestOut(req *http.Request, body bool) ([]byte, error) {
 	if !body || req.Body == nil {
 		req.Body = nil
 		if req.ContentLength != 0 {
-			req.Body = ioutil.NopCloser(io.LimitReader(neverEnding('x'), req.ContentLength))
+			req.Body = io.NopCloser(io.LimitReader(neverEnding('x'), req.ContentLength))
 			dummyBody = true
 		}
 	} else {
@@ -248,7 +247,7 @@ func DumpRequestOut(req *http.Request, body bool) ([]byte, error) {
 		req, _ := http.ReadRequest(bufio.NewReader(pr))
 		// THIS IS THE PART THAT'S BROKEN IN THE STDLIB (as of Go 1.3)
 		if req != nil && req.Body != nil {
-			ioutil.ReadAll(req.Body)
+			io.ReadAll(req.Body)
 		}
 		dr.c <- strings.NewReader("HTTP/1.1 204 No Content\r\n\r\n")
 	}()

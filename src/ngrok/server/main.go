@@ -2,11 +2,9 @@ package server
 
 import (
 	"crypto/tls"
-	"math/rand"
-	"ngrok/conn"
-	log "ngrok/log"
-	"ngrok/msg"
-	"ngrok/util"
+	"github.com/inconshreveable/ngrok/src/ngrok/conn"
+	log "github.com/inconshreveable/ngrok/src/ngrok/log"
+	"github.com/inconshreveable/ngrok/src/ngrok/msg"
 	"os"
 	"runtime/debug"
 	"time"
@@ -104,13 +102,6 @@ func Main() {
 
 	// init logging
 	log.LogTo(opts.logto, opts.loglevel)
-
-	// seed random number generator
-	seed, err := util.RandomSeed()
-	if err != nil {
-		panic(err)
-	}
-	rand.Seed(seed)
 
 	// init tunnel/control registry
 	registryCacheFile := os.Getenv("REGISTRY_CACHE_FILE")

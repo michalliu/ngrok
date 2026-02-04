@@ -5,8 +5,8 @@ import (
 	"fmt"
 	vhost "github.com/inconshreveable/go-vhost"
 	//"net"
-	"ngrok/conn"
-	"ngrok/log"
+	"github.com/inconshreveable/ngrok/src/ngrok/conn"
+	"github.com/inconshreveable/ngrok/src/ngrok/log"
 	"strings"
 	"time"
 )

@@ -2,12 +2,12 @@ package client
 
 import (
 	"fmt"
-	"ngrok/client/mvc"
-	"ngrok/client/views/term"
-	"ngrok/client/views/web"
-	"ngrok/log"
-	"ngrok/proto"
-	"ngrok/util"
+	"github.com/inconshreveable/ngrok/src/ngrok/client/mvc"
+	"github.com/inconshreveable/ngrok/src/ngrok/client/views/term"
+	"github.com/inconshreveable/ngrok/src/ngrok/client/views/web"
+	"github.com/inconshreveable/ngrok/src/ngrok/log"
+	"github.com/inconshreveable/ngrok/src/ngrok/proto"
+	"github.com/inconshreveable/ngrok/src/ngrok/util"
 	"sync"
 )
 

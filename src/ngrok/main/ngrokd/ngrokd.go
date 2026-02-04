@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ngrok/server"
+	"github.com/inconshreveable/ngrok/src/ngrok/server"
 )
 
 func main() {

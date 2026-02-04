@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/inconshreveable/ngrok/src/ngrok/conn"
+	"github.com/inconshreveable/ngrok/src/ngrok/log"
 	gometrics "github.com/rcrowley/go-metrics"
-	"io/ioutil"
+	"io"
 	"net/http"
-	"ngrok/conn"
-	"ngrok/log"
 	"os"
 	"time"
 )
@@ -241,7 +241,7 @@ func (k *KeenIoMetrics) AuthedRequest(method, path string, body *bytes.Reader) (
 		k.Info("keen.io processed request in %f sec", time.Since(requestStartAt).Seconds())
 		defer resp.Body.Close()
 		if resp.StatusCode != 200 {
-			bytes, _ := ioutil.ReadAll(resp.Body)
+			bytes, _ := io.ReadAll(resp.Body)
 			k.Error("Got %v response from keen.io: %s", resp.StatusCode, bytes)
 		}
 	}
