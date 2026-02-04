@@ -1,0 +1,111 @@
+version: '3.8'
+
+################################################################################
+# ngrok Docker Compose 配置
+# 用途: 本地开发/测试环境一键部署
+################################################################################
+
+services:
+  # ============================================================================
+  # ngrok 服务端
+  # ============================================================================
+  ngrokd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    image: ngrok/server:latest
+    container_name: ngrokd
+    hostname: ngrokd
+    restart: unless-stopped
+    
+    ports:
+      - "${NGROK_HTTP_PORT:-8080}:80"
+      - "${NGROK_HTTPS_PORT:-8443}:443"
+      - "${NGROK_TUNNEL_PORT:-4443}:4443"
+    
+    environment:
+      - TZ=Asia/Shanghai
+      - LOG_LEVEL=${NGROK_LOG_LEVEL:-INFO}
+    
+    command: [
+      "-domain=${NGROK_DOMAIN:-ngrok.local}",
+      "-httpAddr=:80",
+      "-httpsAddr=:443",
+      "-tunnelAddr=:4443",
+      "-log=stdout",
+      "-log-level=${NGROK_LOG_LEVEL:-INFO}"
+    ]
+    
+    networks:
+      - ngrok-network
+    
+    volumes:
+      # 持久化日志（可选）
+      - ngrok-logs:/var/log/ngrok
+    
+    healthcheck:
+      test: ["CMD", "pidof", "ngrokd"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    labels:
+      - "com.ngrok.service=server"
+      - "com.ngrok.version=2.0"
+
+  # ============================================================================
+  # ngrok 客户端示例（可选）
+  # ============================================================================
+  ngrok-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    image: ngrok/client:latest
+    container_name: ngrok-client
+    restart: unless-stopped
+    
+    environment:
+      - TZ=Asia/Shanghai
+    
+    # 示例：连接到本地服务器并暴露端口 8000
+    command: [
+      "-config=/etc/ngrok/config.yml",
+      "-log=stdout",
+      "start",
+      "webapp"
+    ]
+    
+    networks:
+      - ngrok-network
+    
+    volumes:
+      # 挂载配置文件
+      - ./config/ngrok-client.yml:/etc/ngrok/config.yml:ro
+    
+    depends_on:
+      ngrokd:
+        condition: service_healthy
+    
+    labels:
+      - "com.ngrok.service=client"
+      - "com.ngrok.version=2.0"
+
+################################################################################
+# 网络配置
+################################################################################
+networks:
+  ngrok-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+################################################################################
+# 卷配置
+################################################################################
+volumes:
+  ngrok-logs:
+    driver: local

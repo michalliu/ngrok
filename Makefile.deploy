@@ -1,0 +1,65 @@
+################################################################################
+# ngrok Docker 部署 Makefile 扩展
+# 用法: make -f Makefile.deploy [target]
+# 或在主 Makefile 中添加: include Makefile.deploy
+################################################################################
+
+.PHONY: docker-help docker-up docker-down docker-restart docker-logs docker-ps docker-clean docker-test
+
+# 默认目标
+docker-help:
+	@./deploy.sh --help
+
+# 启动服务
+docker-up:
+	@./deploy.sh up
+
+# 停止服务
+docker-down:
+	@./deploy.sh down
+
+# 重启服务
+docker-restart:
+	@./deploy.sh restart
+
+# 查看日志
+docker-logs:
+	@./deploy.sh logs
+
+# 查看容器状态
+docker-ps:
+	@./deploy.sh ps
+
+# 清理所有资源
+docker-clean:
+	@./deploy.sh clean
+
+# 运行测试
+docker-test:
+	@./test-deploy.sh
+
+# 调试模式启动
+docker-debug:
+	@./deploy.sh --debug up
+
+# 生产环境部署
+docker-prod:
+	@./deploy.sh --env=prod up
+
+# 快速重启（不重新构建）
+docker-reload:
+	@./deploy.sh down && sleep 2 && ./deploy.sh up
+
+# 显示部署相关命令
+docker-targets:
+	@echo "可用的 Docker 部署命令:"
+	@echo "  make docker-up       - 启动所有服务"
+	@echo "  make docker-down     - 停止所有服务"
+	@echo "  make docker-restart  - 重启所有服务"
+	@echo "  make docker-logs     - 查看日志"
+	@echo "  make docker-ps       - 查看容器状态"
+	@echo "  make docker-clean    - 清理所有资源"
+	@echo "  make docker-test     - 运行部署测试"
+	@echo "  make docker-debug    - 调试模式启动"
+	@echo "  make docker-prod     - 生产环境部署"
+	@echo "  make docker-reload   - 快速重启"

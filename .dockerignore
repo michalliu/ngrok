@@ -1,0 +1,38 @@
+# Git 相关
+.git
+.gitignore
+.gitattributes
+
+# 文档和示例
+*.md
+docs/
+examples/
+
+# IDE 和编辑器
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 构建产物（不需要复制到镜像）
+bin/
+.deploy.lock
+deploy.log
+
+# 依赖缓存
+pkg/
+
+# 环境配置
+.env
+.env.local
+docker-compose.override.yml
+
+# 测试文件
+*_test.go
+test/
+coverage.out

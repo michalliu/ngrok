@@ -1,0 +1,29 @@
+# ============================================================================
+# ngrok 客户端配置示例
+# ============================================================================
+
+# 服务器地址（Docker 环境中使用服务名）
+server_addr: ngrokd:4443
+
+# 信任的证书（开发环境可跳过验证）
+trust_host_root_certs: false
+
+# Web 检查界面地址
+inspect_addr: 0.0.0.0:4040
+
+# 认证令牌（如果服务端启用了认证）
+# auth_token: YOUR_AUTH_TOKEN_HERE
+
+# 隧道配置
+tunnels:
+  # HTTP 隧道示例
+  webapp:
+    subdomain: myapp
+    proto:
+      http: 8000
+  
+  # TCP 隧道示例
+  ssh:
+    proto:
+      tcp: 22
+    remote_port: 12345
